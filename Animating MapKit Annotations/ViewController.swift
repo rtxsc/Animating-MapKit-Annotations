@@ -19,6 +19,9 @@ class ViewController: UIViewController {
     
     var lat = 1.583301
     var lon = 110.388393
+    var shift_lat = 0.0 // running latitude
+    var shift_lon = 0.0 // running longitude
+    var radius = 0.001 // rotation radius
  
     var tick: Double! = 0.0
     var shift: Double! = 0.0
@@ -101,8 +104,10 @@ class ViewController: UIViewController {
                UIView.animate(withDuration: 5, animations: {
                 
                 // update new coordinates every 5 seconds
-                   newPosition1 = CLLocationCoordinate2D(latitude: self!.lat, longitude: self!.lon + self!.shift)
-                   newPosition2 = CLLocationCoordinate2D(latitude: self!.lat, longitude: self!.lon - self!.shift)
+                newPosition1 = CLLocationCoordinate2D(latitude: self!.lat + self!.shift_lat, longitude: self!.lon + self!.shift_lon)
+                newPosition2 = CLLocationCoordinate2D(latitude: self!.lat - self!.shift_lat, longitude: self!.lon - self!.shift_lon)
+
+
                 labelmarker1.coordinate = newPosition1
                 labelmarker2.coordinate = newPosition2
                    print(newPosition1)
@@ -131,7 +136,11 @@ class ViewController: UIViewController {
    @objc func timerAction(){
        tick += 1
        shift = tick / 10000
-       print("second: \(tick!) & lon shifted by: \(shift!)")
+// divisor in the expression `tick / 10` controls the animation speed.
+        shift_lon = radius * sin(tick / 10)
+        shift_lat = radius * cos(tick / 10)
+//print("second: \(tick!) & lon shifted by: \(shift!)")
+//print("lat:\(shift_lat) lon:\(shift_lon)")
     
        }
     
